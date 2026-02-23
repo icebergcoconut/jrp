@@ -165,7 +165,7 @@ from pyspark.sql.functions import col, avg
 
 # Initialize a local Spark "Cluster" inside this notebook
 print("Spinning up local Apache Spark cluster...")
-spark = SparkSession.builder.appName("TradingSignalApp").getOrCreate()
+spark = SparkSession.builder.appName("TradingBacktestApp").getOrCreate()
 
 # Create dummy stock data spreading across our DataFrame
 data = [

@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # 02 - シグナル計算 (Signal Calculation)
+# MAGIC # 02 - シグナル計算 (Backtest Calculation)
 # MAGIC テクニカル指標（SMA, RSI）とトレードシグナルを計算
 
 # COMMAND ----------
@@ -17,7 +17,7 @@ except NameError:
     os.environ["PYSPARK_SUBMIT_ARGS"] = '--driver-java-options "-Djava.security.manager=allow" pyspark-shell'
     
     from pyspark.sql import SparkSession
-    spark = SparkSession.builder.appName("SignalCalculation") \
+    spark = SparkSession.builder.appName("BacktestCalculation") \
         .config("spark.sql.warehouse.dir", os.path.abspath("spark-warehouse")) \
         .getOrCreate()
         
@@ -133,7 +133,7 @@ print("✅ リターン・配当分類 計算完了")
 # COMMAND ----------
 
 # ── 総合シグナル ──
-df = df.withColumn("signal",
+df = df.withColumn("decision",
     F.when(F.col("golden_cross") == True, F.lit("BUY"))
      .when(F.col("dead_cross") == True, F.lit("SELL"))
      .when(F.col("rsi_14") < 30, F.lit("OVERSOLD"))
@@ -144,13 +144,13 @@ df = df.withColumn("signal",
 )
 
 # シグナル強度スコア (1-10)
-df = df.withColumn("signal_strength",
-    F.when(F.col("signal") == "BUY", F.lit(8))
-     .when(F.col("signal") == "SELL", F.lit(8))
-     .when(F.col("signal") == "OVERSOLD", F.lit(7))
-     .when(F.col("signal") == "OVERBOUGHT", F.lit(7))
-     .when(F.col("signal") == "BUY_BB", F.lit(6))
-     .when(F.col("signal") == "SELL_BB", F.lit(6))
+df = df.withColumn("decision_strength",
+    F.when(F.col("decision") == "BUY", F.lit(8))
+     .when(F.col("decision") == "SELL", F.lit(8))
+     .when(F.col("decision") == "OVERSOLD", F.lit(7))
+     .when(F.col("decision") == "OVERBOUGHT", F.lit(7))
+     .when(F.col("decision") == "BUY_BB", F.lit(6))
+     .when(F.col("decision") == "SELL_BB", F.lit(6))
      .otherwise(F.lit(3))
 )
 
@@ -165,9 +165,9 @@ result = df.drop(
     "avg_gain", "avg_loss", "bb_std"
 )
 
-result.write.mode("overwrite").saveAsTable("stock_signals")
+result.write.mode("overwrite").saveAsTable("stock_backtests")
 
-print("✅ stock_signals テーブルに保存完了")
+print("✅ stock_backtests テーブルに保存完了")
 
 # COMMAND ----------
 
@@ -177,7 +177,7 @@ display(
     result.select(
         "ticker", "company_name", "Date", "Close", 
         "sma_20", "sma_50", "rsi_14", 
-        "dividend_yield", "signal", "signal_strength"
+        "dividend_yield", "decision", "decision_strength"
     ).orderBy(F.desc("Date")).limit(20)
 )
 
@@ -186,7 +186,7 @@ display(
 # ── シグナル分布 ──
 print("=== シグナル分布 ===")
 display(
-    result.groupBy("signal")
+    result.groupBy("decision")
     .agg(F.count("*").alias("count"))
     .orderBy(F.desc("count"))
 )

@@ -1,5 +1,5 @@
 """
-Configuration for the Japan Stock Trading Signal App.
+Configuration for the Japan Stock Trading Backtest App.
 Defines target stocks, date ranges, and indicator parameters.
 """
 
@@ -32,9 +32,9 @@ RSI_PERIOD = 14
 BB_PERIOD = 20
 BB_STD = 2
 
-# ── Signal Parameters ──
-SIGNAL_FORWARD_DAYS = 20      # Look-ahead window for label generation
-SIGNAL_THRESHOLD = 0.03       # 3% return threshold for BUY signal
+# ── Backtest Parameters ──
+BACKTEST_FORWARD_DAYS = 20      # Look-ahead window for label generation
+BACKTEST_THRESHOLD = 0.03       # 3% return threshold for BUY decision
 
 # ── Fundamental Metrics ──
 FUNDAMENTAL_METRICS = ["trailingPE", "priceToBook", "returnOnEquity", "marketCap", "dividendYield"]
@@ -44,7 +44,7 @@ BMQ_BROKER_URI = "tcp://localhost:30114"
 BMQ_QUEUE_URI = "bmq://bmq.test.mmap.priority/stock-data-queue"
 
 # ── AWS SageMaker ──
-SAGEMAKER_ENDPOINT_NAME = "jp-stock-signal-xgboost"
+SAGEMAKER_ENDPOINT_NAME = "jp-stock-backtest-xgboost"
 SAGEMAKER_REGION = "ap-northeast-1"
 
 # ── Paths ──

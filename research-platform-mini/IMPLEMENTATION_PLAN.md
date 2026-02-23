@@ -73,7 +73,7 @@ graph TD;
 
 **Goal**: Prepare and engineer features from raw OHLCV market data.
 1. Push queued raw data into Databricks tables (Delta open-source format).
-2. Notebooks `01_data_ingestion.py` and `02_signal_calculation.py` handle technical metric derivations:
+2. Notebooks `01_data_ingestion.py` and `02_strategy_evaluation.py` handle technical metric derivations:
    - Simple Moving Averages (20, 50, 200).
    - Relative Strength Index (RSI).
    - Bollinger Bands / Moving Average crossovers.
@@ -111,7 +111,7 @@ graph TD;
 2. Display a dashboard utilizing data from the Java Backend.
 3. Showcase premium design patterns with CSS, interactive elements, and micro-animations.
 4. Employ **Chart.js** to render candlestick charts and moving average lines.
-5. Create components like Status Boards, Dividend Rankings, and Signal Badges (e.g., BUY, SELL, HOLD).
+5. Create components like Status Boards, Dividend Rankings, and Backtest Badges (e.g., BUY, SELL, HOLD).
 
 ---
 
@@ -124,4 +124,4 @@ graph TD;
 4. Utilize `.env` parameter configurations to safely inject AWS SageMaker keys and Databricks tokens into standard operational runtimes securely.
 
 ---
-**This comprehensive stack demonstrates sophisticated engineering patterns suitable for scalable enterprise trading signal platforms.**
+**This comprehensive stack demonstrates sophisticated engineering patterns suitable for scalable enterprise trading backtest platforms.**

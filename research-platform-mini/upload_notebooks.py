@@ -9,7 +9,7 @@ w = WorkspaceClient()
 
 files_to_upload = [
     "databricks/01_data_ingestion.py",
-    "databricks/02_signal_calculation.py",
+    "databricks/02_strategy_evaluation.py",
     "databricks/03_data_export.py"
 ]
 

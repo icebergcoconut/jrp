@@ -5,8 +5,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "stock_signals")
-public class StockSignal {
+@Table(name = "stock_backtests")
+public class StockBacktest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,21 +14,21 @@ public class StockSignal {
 
     private String ticker;
     private String companyName;
-    private LocalDate signalDate;
-    private String signalType; // BUY, SELL, HOLD
+    private LocalDate decisionDate;
+    private String decisionType; // BUY, SELL, HOLD
     private Double confidence;
 
     private BigDecimal closePrice;
     private Double rsi14;
     private Double fundamentalScore;
     
-    public StockSignal() {}
+    public StockBacktest() {}
 
-    public StockSignal(String ticker, String companyName, LocalDate signalDate, String signalType, Double confidence, BigDecimal closePrice, Double rsi14, Double fundamentalScore) {
+    public StockBacktest(String ticker, String companyName, LocalDate decisionDate, String decisionType, Double confidence, BigDecimal closePrice, Double rsi14, Double fundamentalScore) {
         this.ticker = ticker;
         this.companyName = companyName;
-        this.signalDate = signalDate;
-        this.signalType = signalType;
+        this.decisionDate = decisionDate;
+        this.decisionType = decisionType;
         this.confidence = confidence;
         this.closePrice = closePrice;
         this.rsi14 = rsi14;
@@ -42,10 +42,10 @@ public class StockSignal {
     public void setTicker(String ticker) { this.ticker = ticker; }
     public String getCompanyName() { return companyName; }
     public void setCompanyName(String companyName) { this.companyName = companyName; }
-    public LocalDate getSignalDate() { return signalDate; }
-    public void setSignalDate(LocalDate signalDate) { this.signalDate = signalDate; }
-    public String getSignalType() { return signalType; }
-    public void setSignalType(String signalType) { this.signalType = signalType; }
+    public LocalDate getBacktestDate() { return decisionDate; }
+    public void setDecisionDate(LocalDate decisionDate) { this.decisionDate = decisionDate; }
+    public String getBacktestType() { return decisionType; }
+    public void setBacktestType(String decisionType) { this.decisionType = decisionType; }
     public Double getConfidence() { return confidence; }
     public void setConfidence(Double confidence) { this.confidence = confidence; }
     public BigDecimal getClosePrice() { return closePrice; }

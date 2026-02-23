@@ -1,8 +1,8 @@
 """
-Backtesting Engine — Event-Driven Backtest for Trading Signals
+Backtesting Engine — Event-Driven Backtest for Trading Backtests
 
-Entry rule: BUY signal from XGBoost model
-Exit rule: After 20 trading days OR when HOLD signal is generated
+Entry rule: BUY decision from XGBoost model
+Exit rule: After 20 trading days OR when HOLD decision is generated
 Metrics: Cumulative return, Sharpe ratio, max drawdown, win rate
 """
 
@@ -66,9 +66,9 @@ class BacktestEngine:
     """
     Event-driven backtesting engine.
 
-    Simulates trading based on BUY/HOLD signals:
-    - BUY signal → Enter position (if not already in one)
-    - Exit after HOLDING_PERIOD days or on HOLD signal
+    Simulates trading based on BUY/HOLD decisions:
+    - BUY decision → Enter position (if not already in one)
+    - Exit after HOLDING_PERIOD days or on HOLD decision
     - Calculates comprehensive performance metrics
     """
 
@@ -87,8 +87,8 @@ class BacktestEngine:
         Run backtest on a single ticker's data.
 
         Args:
-            df: DataFrame with columns: Date, Close, signal, confidence
-                signal: 'BUY' or 'HOLD'
+            df: DataFrame with columns: Date, Close, decision, confidence
+                decision: 'BUY' or 'HOLD'
                 confidence: float 0-1 (from ML model)
             ticker: Stock ticker symbol
 
@@ -105,7 +105,7 @@ class BacktestEngine:
         for i, row in df.iterrows():
             date = str(row["Date"])[:10]
             close = float(row["Close"])
-            signal = row.get("signal", "HOLD")
+            decision = row.get("decision", "HOLD")
             confidence = float(row.get("confidence", 0.5))
 
             # Check exit conditions for open position
@@ -114,10 +114,10 @@ class BacktestEngine:
 
                 # Exit conditions:
                 # 1. Holding period exceeded
-                # 2. Signal changed to HOLD (model says no longer a buy)
+                # 2. Backtest changed to HOLD (model says no longer a buy)
                 should_exit = (
                     position.holding_days >= self.holding_period
-                    or (signal == "HOLD" and position.holding_days >= 3)  # Min 3 days hold
+                    or (decision == "HOLD" and position.holding_days >= 3)  # Min 3 days hold
                 )
 
                 if should_exit:
@@ -128,7 +128,7 @@ class BacktestEngine:
                     position.pnl_pct = ((close - position.entry_price) / position.entry_price) * 100
                     position.exit_reason = (
                         "holding_period" if position.holding_days >= self.holding_period
-                        else "signal_change"
+                        else "decision_change"
                     )
 
                     # Apply commission
@@ -143,7 +143,7 @@ class BacktestEngine:
                     position = None
 
             # Check entry conditions
-            if position is None and signal == "BUY":
+            if position is None and decision == "BUY":
                 position = Trade(
                     ticker=ticker,
                     entry_date=date,
@@ -161,7 +161,7 @@ class BacktestEngine:
                 "date": date,
                 "portfolio_value": round(current_value, 2),
                 "close": close,
-                "signal": signal,
+                "decision": decision,
                 "in_position": position is not None,
             })
 
@@ -294,14 +294,14 @@ def run_backtest_for_ticker(
             raise FileNotFoundError(f"No data found for {ticker}")
 
     # Ensure required columns
-    if "signal" not in df.columns:
-        # Generate simple signal based on SMA crossover
-        df["signal"] = "HOLD"
+    if "decision" not in df.columns:
+        # Generate simple decision based on SMA crossover
+        df["decision"] = "HOLD"
         if "sma_25" in df.columns and "sma_75" in df.columns:
             df.loc[
                 (df["sma_25"] > df["sma_75"]) &
                 (df["sma_25"].shift(1) <= df["sma_75"].shift(1)),
-                "signal"
+                "decision"
             ] = "BUY"
 
     if "confidence" not in df.columns:
@@ -330,7 +330,7 @@ if __name__ == "__main__":
     demo_df = pd.DataFrame({
         "Date": dates,
         "Close": price,
-        "signal": np.random.choice(["BUY", "HOLD", "HOLD", "HOLD", "HOLD"], size=len(dates)),
+        "decision": np.random.choice(["BUY", "HOLD", "HOLD", "HOLD", "HOLD"], size=len(dates)),
         "confidence": np.random.uniform(0.3, 0.9, size=len(dates)),
     })
 

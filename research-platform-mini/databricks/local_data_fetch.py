@@ -63,7 +63,7 @@ def fetch_stock_data(tickers: list, days: int = 730) -> pd.DataFrame:
     return df
 
 
-def calculate_signals(df: pd.DataFrame) -> pd.DataFrame:
+def calculate_decisions(df: pd.DataFrame) -> pd.DataFrame:
     """テクニカル指標 & シグナル計算"""
     results = []
 
@@ -118,11 +118,11 @@ def calculate_signals(df: pd.DataFrame) -> pd.DataFrame:
             tdf['Close'] < tdf['bb_lower'],
             tdf['Close'] > tdf['bb_upper'],
         ]
-        signals = ['BUY', 'SELL', 'OVERSOLD', 'OVERBOUGHT', 'BUY_BB', 'SELL_BB']
-        tdf['signal'] = np.select(conditions, signals, default='HOLD')
+        decisions = ['BUY', 'SELL', 'OVERSOLD', 'OVERBOUGHT', 'BUY_BB', 'SELL_BB']
+        tdf['decision'] = np.select(conditions, decisions, default='HOLD')
 
         strength_map = {'BUY': 8, 'SELL': 8, 'OVERSOLD': 7, 'OVERBOUGHT': 7, 'BUY_BB': 6, 'SELL_BB': 6, 'HOLD': 3}
-        tdf['signal_strength'] = tdf['signal'].map(strength_map)
+        tdf['decision_strength'] = tdf['decision'].map(strength_map)
 
         # 不要カラム削除
         tdf = tdf.drop(columns=['prev_sma_20', 'prev_sma_50'], errors='ignore')
@@ -134,18 +134,18 @@ def calculate_signals(df: pd.DataFrame) -> pd.DataFrame:
 def export_data(df: pd.DataFrame, output_dir: str):
     """CSV/JSONでエクスポート"""
     # 全データCSV
-    full_path = os.path.join(output_dir, "stock_signals_full.csv")
+    full_path = os.path.join(output_dir, "stock_backtests_full.csv")
     df.to_csv(full_path, index=False)
     print(f"📁 全データCSV: {full_path} ({len(df):,} rows)")
 
     # 最新データのみ
     latest = df.loc[df.groupby('ticker')['Date'].idxmax()]
-    latest_path = os.path.join(output_dir, "latest_signals.csv")
+    latest_path = os.path.join(output_dir, "latest_backtests.csv")
     latest.to_csv(latest_path, index=False)
     print(f"📁 最新データCSV: {latest_path} ({len(latest)} rows)")
 
     # JSON (API用)
-    latest_json_path = os.path.join(output_dir, "latest_signals.json")
+    latest_json_path = os.path.join(output_dir, "latest_backtests.json")
     latest.to_json(latest_json_path, orient="records", date_format="iso", indent=2)
     print(f"📁 最新データJSON: {latest_json_path}")
 
@@ -172,17 +172,17 @@ def main():
     print(f"\n合計: {len(df):,} rows, {df['ticker'].nunique()} tickers")
 
     print("\n[2/3] シグナル計算中...")
-    signals = calculate_signals(df)
+    decisions = calculate_decisions(df)
 
     print("\n[3/3] データエクスポート中...")
-    export_data(signals, OUTPUT_DIR)
+    export_data(decisions, OUTPUT_DIR)
 
     # サマリー表示
-    latest = signals.loc[signals.groupby('ticker')['Date'].idxmax()]
+    latest = decisions.loc[decisions.groupby('ticker')['Date'].idxmax()]
     print("\n" + "=" * 60)
     print("  📊 最新シグナルサマリー")
     print("=" * 60)
-    summary_cols = ['ticker', 'company_name', 'Close', 'sma_20', 'rsi_14', 'dividend_yield', 'signal']
+    summary_cols = ['ticker', 'company_name', 'Close', 'sma_20', 'rsi_14', 'dividend_yield', 'decision']
     print(latest[summary_cols].to_string(index=False))
     print("=" * 60)
     print("✅ 完了！データは backend/src/main/resources/data/ に保存されました")

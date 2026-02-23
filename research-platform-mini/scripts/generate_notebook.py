@@ -20,9 +20,9 @@ def create_code_cell(source):
 cells = []
 
 # Cell 1
-cells.append(create_markdown_cell("""# 📈 JP Signal — Architecture Deep Dive & Interview Mastery Guide
+cells.append(create_markdown_cell("""# 📈 JP Backtest — Architecture Deep Dive & Interview Mastery Guide
 
-Welcome to the interactive guide for the **Japan Stock Trading Signal App**.
+Welcome to the interactive guide for the **Japan Stock Trading Backtest App**.
 This notebook is designed to train you to confidently explain, demonstrate, and defend the architectural choices of this project during senior engineering interviews.
 
 ### Core Objectives:
@@ -209,7 +209,7 @@ Review these strictly before the interview to solidify your architecture defense
 **A:** "For a simple MVP, yes. However, this is designed to demonstrate an enterprise-grade microservice architecture. Modern enterprises often use best-of-breed tools: Databricks is the undisputed leader for Spark data processing, SageMaker streamlines ML lifecycle management, and Azure offers excellent Docker hosting for the API. It proves I can design cloud-agnostic, event-driven systems that are tightly decoupled."
 
 ### Q: "How did you prevent look-ahead bias in your backtesting?"
-**A:** "Two ways: First, in the ML train/test split, I used strictly chronological splitting rather than random cross-validation, ensuring the model never sees future data during training. Second, in the backtest engine, when a `BUY` signal is generated at the end of Day T (using closing prices), the engine executes the trade at the **Open price of Day T+1**, simulating realistic trade latency."
+**A:** "Two ways: First, in the ML train/test split, I used strictly chronological splitting rather than random cross-validation, ensuring the model never sees future data during training. Second, in the backtest engine, when a `BUY` decision is generated at the end of Day T (using closing prices), the engine executes the trade at the **Open price of Day T+1**, simulating realistic trade latency."
 
 ### Q: "If I wanted to add real-time streaming data instead of daily, what changes?"
 **A:** "The architecture remains largely the same because we decoupled ingestion via **BlazingMQ**. We would update the yfinance producer to read a web-socket stream (e.g., from IBKR or Alpaca). Databricks would switch from batch notebook jobs to Spark Structured Streaming to incrementally update the Delta tables. SageMaker and FastAPI would continue to serve inferences exactly as they do now." """))

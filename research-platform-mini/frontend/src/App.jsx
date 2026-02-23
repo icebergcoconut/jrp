@@ -20,12 +20,12 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div className="dashboard"><h1>Loading AI Signals...</h1></div>;
+    return <div className="dashboard"><h1>Loading AI Backtests...</h1></div>;
   }
 
   return (
     <div className="dashboard">
-      <h1>JP Signal</h1>
+      <h1>JP Backtest</h1>
       <p className="subtitle">AI-powered tracking for Japanese blue-chip stocks.</p>
 
       <div className="grid">
@@ -34,8 +34,8 @@ function App() {
             <h3>{s.ticker}</h3>
             <div className="price">
               ¥{s.closePrice.toLocaleString()}
-              <span className={`signal-badge signal-${s.signalType}`}>
-                {s.signalType}
+              <span className={`decision-badge decision-${s.decisionType}`}>
+                {s.decisionType}
               </span>
             </div>
             <div>{s.companyName}</div>

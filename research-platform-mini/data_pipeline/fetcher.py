@@ -76,7 +76,7 @@ def fetch_all_stocks() -> tuple[pd.DataFrame, pd.DataFrame]:
     Returns (ohlcv_df, fundamentals_df).
     """
     logger.info("=" * 60)
-    logger.info("  📊 Japan Stock Trading Signal — Data Fetch")
+    logger.info("  📊 Japan Stock Trading Backtest — Data Fetch")
     logger.info("=" * 60)
 
     # OHLCV

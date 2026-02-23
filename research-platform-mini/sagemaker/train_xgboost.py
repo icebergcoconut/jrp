@@ -1,6 +1,6 @@
 """
 SageMaker XGBoost Training Script
-Trains a binary classifier to predict BUY (1) vs HOLD (0) signals.
+Trains a binary classifier to predict BUY (1) vs HOLD (0) decisions.
 
 Usage:
   1. Upload training_data.csv to S3
@@ -44,7 +44,7 @@ def prepare_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     features["sma_25_ratio"] = df["sma_25"] / df["Close"] - 1
     features["sma_75_ratio"] = df["sma_75"] / df["Close"] - 1
 
-    # SMA crossover signals
+    # SMA crossover decisions
     features["sma_25_above_75"] = (df["sma_25"] > df["sma_75"]).astype(int)
     features["close_above_sma25"] = (df["Close"] > df["sma_25"]).astype(int)
 
@@ -183,7 +183,7 @@ def save_model(model: xgb.XGBClassifier, output_dir: str = "data/model"):
 
 if __name__ == "__main__":
     logger.info("=" * 60)
-    logger.info("  🤖 XGBoost Signal Model Training")
+    logger.info("  🤖 XGBoost Backtest Model Training")
     logger.info("=" * 60)
 
     # Load training data

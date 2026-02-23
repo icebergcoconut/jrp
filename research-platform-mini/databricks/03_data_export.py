@@ -27,13 +27,13 @@ except NameError:
 
 # COMMAND ----------
 
-# ── stock_signals テーブル読み込み ──
+# ── stock_backtests テーブル読み込み ──
 try:
-    df = spark.table("stock_signals")
+    df = spark.table("stock_backtests")
 except Exception:
     import os
-    print("⚠️ Local Table 'stock_signals' not found in catalog. Reading from Parquet...")
-    df = spark.read.parquet(os.path.abspath("spark-warehouse/stock_signals"))
+    print("⚠️ Local Table 'stock_backtests' not found in catalog. Reading from Parquet...")
+    df = spark.read.parquet(os.path.abspath("spark-warehouse/stock_backtests"))
     
 print(f"全レコード数: {df.count():,}")
 print(f"銘柄数: {df.select('ticker').distinct().count()}")
@@ -54,7 +54,7 @@ display(
         "ticker", "company_name", "Date", "Close",
         "sma_20", "sma_50", "rsi_14",
         "dividend_yield", "pe_ratio", "sector",
-        "signal", "signal_strength", "dividend_category"
+        "decision", "decision_strength", "dividend_category"
     ).orderBy("ticker")
 )
 
@@ -63,13 +63,13 @@ display(
 # ── CSV出力 ──
 # 全データ
 full_pdf = df.toPandas()
-full_pdf.to_csv("/tmp/stock_signals_full.csv", index=False)
-print(f"✅ 全データCSV: /tmp/stock_signals_full.csv ({len(full_pdf):,} rows)")
+full_pdf.to_csv("/tmp/stock_backtests_full.csv", index=False)
+print(f"✅ 全データCSV: /tmp/stock_backtests_full.csv ({len(full_pdf):,} rows)")
 
 # 最新データのみ
 latest_pdf = latest.toPandas()
-latest_pdf.to_csv("/tmp/latest_signals.csv", index=False)
-print(f"✅ 最新データCSV: /tmp/latest_signals.csv ({len(latest_pdf)} rows)")
+latest_pdf.to_csv("/tmp/latest_backtests.csv", index=False)
+print(f"✅ 最新データCSV: /tmp/latest_backtests.csv ({len(latest_pdf)} rows)")
 
 # COMMAND ----------
 
@@ -78,9 +78,9 @@ import json
 
 # 最新シグナル
 latest_json = latest_pdf.to_json(orient="records", date_format="iso")
-with open("/tmp/latest_signals.json", "w") as f:
+with open("/tmp/latest_backtests.json", "w") as f:
     f.write(latest_json)
-print("✅ 最新シグナルJSON: /tmp/latest_signals.json")
+print("✅ 最新シグナルJSON: /tmp/latest_backtests.json")
 
 # 銘柄ごとの履歴（APIエンドポイント用）
 for ticker in full_pdf['ticker'].unique():
@@ -120,8 +120,8 @@ for fname in sorted(export_files):
 
 print(f"\n✅ FileStoreにコピー完了")
 print(f"ダウンロードURL例:")
-print(f"  https://community.cloud.databricks.com/files/rpm_export/latest_signals.csv")
-print(f"  https://community.cloud.databricks.com/files/rpm_export/stock_signals_full.csv")
+print(f"  https://community.cloud.databricks.com/files/rpm_export/latest_backtests.csv")
+print(f"  https://community.cloud.databricks.com/files/rpm_export/stock_backtests_full.csv")
 
 # COMMAND ----------
 

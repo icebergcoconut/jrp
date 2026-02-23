@@ -6,7 +6,7 @@ services:
       - "8000:8000"
     environment:
       - PYTHONPATH=/app
-      - SAGEMAKER_ENDPOINT_NAME=jp-stock-signal-xgboost
+      - SAGEMAKER_ENDPOINT_NAME=jp-stock-backtest-xgboost
       - AWS_DEFAULT_REGION=ap-northeast-1
     volumes:
       - ./data:/app/data
