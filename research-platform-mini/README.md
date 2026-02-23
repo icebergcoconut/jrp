@@ -1,6 +1,6 @@
-# 📈 JP Signal — Japan Stock Trading Signal App
+# 📈 JP Backtest — Japan Stock Backtesting App
 
-> AI-powered trading signal application for Japanese blue-chip stocks.
+> AI-powered backtesting application for Japanese blue-chip stocks.
 
 ## 🏗️ Architecture
 
@@ -10,7 +10,7 @@ Yahoo Finance (yfinance)
   → BlazingMQ (message queue)
   → Python Consumer
   → Databricks (Delta Lake + feature engineering)
-  → AWS SageMaker (XGBoost signal model)
+  → AWS SageMaker (XGBoost prediction model)
   → Java Spring Boot Backend
   → Cloud App Service (React frontend)
 ```
@@ -34,7 +34,7 @@ Yahoo Finance (yfinance)
 
 - **Data Pipeline**: Python-based ingestion from Yahoo Finance, decoupled via BlazingMQ.
 - **Data Engineering**: Databricks ecosystem for feature engineering (SMA, RSI, Bollinger Bands).
-- **ML-Powered Signals**: XGBoost binary classifier deployed to AWS SageMaker for predicting signals.
+- **ML-Powered Backtesting**: XGBoost binary classifier deployed to AWS SageMaker for evaluating trading strategies.
 - **Enterprise Backend**: Built with Java 21 and Spring Boot 3.x for robust API services.
 - **Interactive UI**: React 18 + Vite frontend for premium charting and dashboards.
 - **Cloud Native**: Deployable to Cloud App Service with Docker and CI/CD.
