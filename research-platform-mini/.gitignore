@@ -1,0 +1,31 @@
+# === Java / Spring Boot ===
+backend/target/
+backend/*.jar
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# === Node / React ===
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# === Python ===
+__pycache__/
+*.pyc
+.venv/
+
+# === IDE ===
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+
+# === Data files ===
+*.csv
+*.parquet
+data/
+
+# === Environment ===
+.env
+.env.local
+.env.production

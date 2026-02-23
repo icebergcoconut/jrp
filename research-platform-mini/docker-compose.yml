@@ -1,0 +1,26 @@
+services:
+  # ── FastAPI App ──
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONPATH=/app
+      - SAGEMAKER_ENDPOINT_NAME=jp-stock-signal-xgboost
+      - AWS_DEFAULT_REGION=ap-northeast-1
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped
+  # ── BlazingMQ Message Queue ──
+  # (Commented out because the official image is not on Docker Hub yet.
+  #  You would need to build it manually from github.com/bloomberg/blazingmq)
+  # blazingmq:
+  #   image: bloomberg/blazingmq-broker:latest
+  #   ports:
+  #     - "30114:30114"
+  #   volumes:
+  #     - bmq-data:/var/lib/blazingmq
+  #   restart: unless-stopped
+
+volumes:
+  bmq-data:

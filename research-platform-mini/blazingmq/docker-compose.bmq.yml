@@ -1,0 +1,22 @@
+# BlazingMQ Docker Compose (standalone)
+# Run with: docker compose -f docker-compose.bmq.yml up -d
+
+version: '3.8'
+
+services:
+  blazingmq-broker:
+    image: bloomberg/blazingmq-broker:latest
+    container_name: blazingmq-broker
+    ports:
+      - "30114:30114" # TCP broker port
+    volumes:
+      - bmq-storage:/var/lib/blazingmq
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "echo", "ok" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  bmq-storage:
