@@ -6,9 +6,9 @@ import unittest
 class TestDatabricksPipeline(unittest.TestCase):
     def test_pipeline_execution(self):
         scripts = [
-            "research-platform-mini/databricks/01_data_ingestion.py",
-            "research-platform-mini/databricks/02_signal_calculation.py",
-            "research-platform-mini/databricks/03_data_export.py"
+            "jrp/databricks/01_data_ingestion.py",
+            "jrp/databricks/02_signal_calculation.py",
+            "jrp/databricks/03_data_export.py"
         ]
         
         python_exe = os.path.join(".venv", "bin", "python")

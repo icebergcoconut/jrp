@@ -13,7 +13,7 @@ files_to_upload = [
     "databricks/03_data_export.py"
 ]
 
-user_folder = f"/Users/{w.current_user.me().user_name}/research-platform-mini"
+user_folder = f"/Users/{w.current_user.me().user_name}/jrp"
 
 try:
     w.workspace.mkdirs(user_folder)

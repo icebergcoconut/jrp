@@ -55,7 +55,7 @@ Yahoo Finance (yfinance)
 ## 📂 Project Structure
 
 ```
-research-platform-mini/
+jrp/
 ├── data_pipeline/     ← yfinance data ingestion
 ├── blazingmq/         ← Message queue producer/consumer
 ├── databricks/        ← Databricks notebooks
