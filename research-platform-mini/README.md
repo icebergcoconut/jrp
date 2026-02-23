@@ -1,7 +1,6 @@
 # 📈 JP Signal — Japan Stock Trading Signal App
 
-> AI-powered trading signal application for Japanese blue-chip stocks.  
-> Demonstrates a production-grade multi-cloud data pipeline architecture.
+> AI-powered trading signal application for Japanese blue-chip stocks.
 
 ## 🏗️ Architecture
 
@@ -13,7 +12,7 @@ Yahoo Finance (yfinance)
   → Databricks (Delta Lake + feature engineering)
   → AWS SageMaker (XGBoost signal model)
   → Java Spring Boot Backend
-  → Azure App Service (React frontend)
+  → Cloud App Service (React frontend)
 ```
 
 ## 🎯 Target Stocks
@@ -38,7 +37,7 @@ Yahoo Finance (yfinance)
 - **ML-Powered Signals**: XGBoost binary classifier deployed to AWS SageMaker for predicting signals.
 - **Enterprise Backend**: Built with Java 21 and Spring Boot 3.x for robust API services.
 - **Interactive UI**: React 18 + Vite frontend for premium charting and dashboards.
-- **Cloud Native**: Deployable to Azure App Service with Docker and CI/CD.
+- **Cloud Native**: Deployable to Cloud App Service with Docker and CI/CD.
 
 ## 🏢 Tech Stack
 
@@ -50,7 +49,7 @@ Yahoo Finance (yfinance)
 | ML Model | AWS SageMaker | XGBoost real-time endpoint |
 | Backend | Java Spring Boot | REST API |
 | Frontend | React + Vite | Interactive charts & Dashboards |
-| Hosting | Azure App Service | Docker container deployment |
+| Hosting | Cloud App Service | Docker container deployment |
 | CI/CD | GitHub Actions | Automated delivery |
 
 ## 📂 Project Structure
@@ -71,7 +70,7 @@ research-platform-mini/
 
 ## 🎤 Interview Talking Points
 
-- **Multi-cloud architecture**: Azure (hosting) + AWS (ML serving) + Databricks (data platform).
+- **Multi-cloud architecture**: Cloud Provider (hosting) + AWS (ML serving) + Databricks (data platform).
 - **Message queue expertise**: Bloomberg's BlazingMQ for decoupled, fault-tolerant data ingestion.
 - **Enterprise Middleware**: Java Spring Boot backend connecting Data Lakes to Frontend UIs securely.
 - **End-to-end ownership**: From raw data ingestion to ML model serving to interactive React UI.
