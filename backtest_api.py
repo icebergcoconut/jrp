@@ -30,10 +30,10 @@ def run_backtest(req: BacktestRequest):
         if len(df) == 0:
             return {"error": "No data found for this ticker and period"}
             
-        if 'Close' in df.columns and isinstance(df.columns, pd.MultiIndex):
-            df['Close'] = df['Close'].droplevel(1, axis=1) if len(df.columns.levels) > 1 else df['Close']
-        
-        close = df['Close'].squeeze()
+        close = df['Close']
+        if isinstance(close, pd.DataFrame):
+            close = close.iloc[:, 0]
+        close = close.squeeze()
         
         # Calculate strategy
         if req.strategy == 'RSI':
