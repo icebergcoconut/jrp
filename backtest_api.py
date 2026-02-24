@@ -82,7 +82,7 @@ def run_backtest(req: BacktestRequest):
         
         # Base asset cumulative return
         base_cum_ret = (1 + daily_returns.dropna()).cumprod()
-        base_values = base_cum_ret.reindex(cum_ret.index).fillna(method='ffill').values.tolist()
+        base_values = base_cum_ret.reindex(cum_ret.index).ffill().values.tolist()
         
         # Round and clean for JSON friendliness
         def clean_val(v):
