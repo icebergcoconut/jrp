@@ -97,46 +97,7 @@ function App() {
       </header>
 
       <main className="content dashboard">
-        <div className="section-block">
-          <h2 className="subtitle">AI-powered tracking for Japanese blue-chip stocks.</h2>
-          {loading ? (
-            <h1>Loading AI Backtests...</h1>
-          ) : (
-            <div className="grid">
-              {stocks.map((s) => (
-                <div className="card" key={s.id}>
-                  <h3>{s.ticker}</h3>
-                  <div className="price">
-                    ¥{s.closePrice.toLocaleString()}
-                    <span className={`decision-badge decision-${s.decisionType}`}>
-                      {s.decisionType}
-                    </span>
-                  </div>
-                  <div>{s.companyName}</div>
-
-                  <div className="metrics">
-                    <div className="metric">
-                      <div className="metric-label">RSI(14)</div>
-                      <div className="metric-value">{s.rsi14.toFixed(1)}</div>
-                    </div>
-                    <div className="metric tooltip-container">
-                      <div className="metric-label">Fund. Score ⓘ</div>
-                      <div className="metric-value">{s.fundamentalScore.toFixed(1)} / 100</div>
-                      <div className="tooltip">A combined financial health rating based on P/E ratios and recent earnings. Higher means the company balance sheet is stronger.</div>
-                    </div>
-                    <div className="metric tooltip-container">
-                      <div className="metric-label">AI Confidence ⓘ</div>
-                      <div className="metric-value">{(s.confidence * 100).toFixed(0)}%</div>
-                      <div className="tooltip">The SageMaker XGBoost AI model's percentage confidence level in its current Buy/Sell/Hold prediction based on historical trends.</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="backtest-panel card" style={{ marginTop: '3rem' }}>
+        <div className="backtest-panel card" style={{ marginBottom: '3rem' }}>
           <h2>Strategy Backtesting Engine</h2>
           <div className="backtest-layout">
             <form className="backtest-form" onSubmit={runBacktest}>
@@ -238,6 +199,45 @@ function App() {
               )}
             </div>
           </div>
+        </div>
+
+        <div className="section-block">
+          <h2 className="subtitle">AI-powered tracking for Japanese blue-chip stocks.</h2>
+          {loading ? (
+            <h1>Loading AI Backtests...</h1>
+          ) : (
+            <div className="grid">
+              {stocks.map((s) => (
+                <div className="card" key={s.id}>
+                  <h3>{s.ticker}</h3>
+                  <div className="price">
+                    ¥{s.closePrice.toLocaleString()}
+                    <span className={`decision-badge decision-${s.decisionType}`}>
+                      {s.decisionType}
+                    </span>
+                  </div>
+                  <div>{s.companyName}</div>
+
+                  <div className="metrics">
+                    <div className="metric">
+                      <div className="metric-label">RSI(14)</div>
+                      <div className="metric-value">{s.rsi14.toFixed(1)}</div>
+                    </div>
+                    <div className="metric tooltip-container">
+                      <div className="metric-label">Fund. Score ⓘ</div>
+                      <div className="metric-value">{s.fundamentalScore.toFixed(1)} / 100</div>
+                      <div className="tooltip">A combined financial health rating based on P/E ratios and recent earnings. Higher means the company balance sheet is stronger.</div>
+                    </div>
+                    <div className="metric tooltip-container">
+                      <div className="metric-label">AI Confidence ⓘ</div>
+                      <div className="metric-value">{(s.confidence * 100).toFixed(0)}%</div>
+                      <div className="tooltip">The SageMaker XGBoost AI model's percentage confidence level in its current Buy/Sell/Hold prediction based on historical trends.</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </main>
     </div>
