@@ -20,16 +20,16 @@ def create_code_cell(source):
 cells = []
 
 # Cell 1
-cells.append(create_markdown_cell("""# 📈 JP Backtest — Architecture Deep Dive & Interview Mastery Guide
+cells.append(create_markdown_cell("""# 📈 JP Backtest — Architecture Deep Dive Guide
 
 Welcome to the interactive guide for the **Japan Stock Trading Backtest App**.
-This notebook is designed to train you to confidently explain, demonstrate, and defend the architectural choices of this project during senior engineering interviews.
+This notebook is designed to train you to confidently explain, demonstrate, and defend the architectural choices of this project.
 
 ### Core Objectives:
 1. Trace the data flow from ingestion to inference.
 2. Understand the rationale behind **BlazingMQ**, **Databricks**, and **SageMaker**.
 3. Execute the core logic locally.
-4. Master the Mock Interview Q&A."""))
+4. Master the Architectural Q&A."""))
 
 # Cell 2
 cells.append(create_markdown_cell("""## 1. Data Ingestion: yfinance to Message Queue
@@ -63,10 +63,10 @@ cells.append(create_markdown_cell("""## 2. The Message Layer: Why BlazingMQ?
 
 Once data is pulled, it is published to **BlazingMQ**.
 
-### 💡 Interviewer: "Why did you choose BlazingMQ over Kafka or RabbitMQ?"
+### 💡 Architectural Defense: "Why choose BlazingMQ over Kafka or RabbitMQ?"
 
-**The Master Answer:**
-> "I chose BlazingMQ to demonstrate my familiarity with the Bloomberg ecosystem and modern high-performance messaging patterns. 
+**The Rationale:**
+> "I chose BlazingMQ to leverage the Bloomberg ecosystem and modern high-performance messaging patterns. 
 > 
 > *   **vs Kafka:** Kafka is essentially an append-only distributed commit log. It requires partitioning for concurrency, which causes 'head-of-line' blocking if processing one partition is slow. BlazingMQ offers a simpler queue-centric peer-to-peer topology which natively supports work-stealing across consumers without rebalancing partitions.
 > *   **vs RabbitMQ:** RabbitMQ uses a centralized broker pattern which becomes a bottleneck under high throughput. BlazingMQ was built by Bloomberg precisely to solve for multi-tenant, low-latency financial systems—it prioritizes deterministic low tail-latency and high throughput over traditional broker designs."
@@ -101,9 +101,9 @@ cells.append(create_markdown_cell("""## 3. The Data Platform: Databricks & Delta
 
 Consumers pull from BlazingMQ and write directly into **Delta Lake** on **Databricks**. 
 
-### 💡 Interviewer: "What is the benefit of Databricks and Delta over just saving to a Postgres database?"
+### 💡 Architectural Defense: "What is the benefit of Databricks and Delta over just saving to a Postgres database?"
 
-**The Master Answer:**
+**The Rationale:**
 > "Financial feature engineering requires time-series window functions over massive datasets. Postgres scales vertically and struggles with huge analytical queries. 
 > Databricks, built on Apache Spark, scales horizontally. More importantly, **Delta Lake** brings ACID transactions to object storage (like S3/Azure Blob). This means if our pipeline fails mid-write, we don't end up with corrupted historical data. Data is saved in open `Parquet` format, which is columnar and significantly faster for reading specific features into our machine learning models."
 
@@ -159,9 +159,9 @@ cells.append(create_markdown_cell("""## 4. Machine Learning: AWS SageMaker & XGB
 
 Once features are stored in Delta Lake, we train our model. In production, this training job runs on **AWS SageMaker**. 
 
-### 💡 Interviewer: "Why serve the model via SageMaker rather than just loading the `.pkl` file in your FastAPI backend directly?"
+### 💡 Architectural Defense: "Why serve the model via SageMaker rather than just loading the `.pkl` file in your FastAPI backend directly?"
 
-**The Master Answer:**
+**The Rationale:**
 > "Loading the model directly into the API (monolith approach) works for MVPs, but fails in production. 
 > 1. **Resource Decoupling:** API servers are CPU-optimized for high concurrency workflows. ML Inference servers often benefit from different instance types (sometimes GPU/Inferentia).
 > 2. **Independent Scaling:** If we get a spike in traffic, we can scale the FastAPI web pods independently from the heavier ML model endpoints.
@@ -201,12 +201,12 @@ print(f"Accuracy: {accuracy_score(y_test, preds):.2%}")
 print("\\nClassification Report:\\n", classification_report(y_test, preds))"""))
 
 # Cell 12
-cells.append(create_markdown_cell("""## 5. Mock Interview: The Final Rapid-Fire Q&A
+cells.append(create_markdown_cell("""## 5. Architectural Q&A
 
-Review these strictly before the interview to solidify your architecture defense.
+Review these to solidify your understanding of the architecture decisions.
 
 ### Q: "Your app spans Azure (Web Apps), AWS (SageMaker), and Databricks. Isn't that overly complex?"
-**A:** "For a simple MVP, yes. However, this is designed to demonstrate an enterprise-grade microservice architecture. Modern enterprises often use best-of-breed tools: Databricks is the undisputed leader for Spark data processing, SageMaker streamlines ML lifecycle management, and Azure offers excellent Docker hosting for the API. It proves I can design cloud-agnostic, event-driven systems that are tightly decoupled."
+**A:** "For a simple MVP, yes. However, this is designed to demonstrate an enterprise-grade microservice architecture. Modern enterprises often use best-of-breed tools: Databricks is the undisputed leader for Spark data processing, SageMaker streamlines ML lifecycle management, and Azure offers excellent Docker hosting for the API. It proves the system is cloud-agnostic, event-driven, and tightly decoupled."
 
 ### Q: "How did you prevent look-ahead bias in your backtesting?"
 **A:** "Two ways: First, in the ML train/test split, I used strictly chronological splitting rather than random cross-validation, ensuring the model never sees future data during training. Second, in the backtest engine, when a `BUY` decision is generated at the end of Day T (using closing prices), the engine executes the trade at the **Open price of Day T+1**, simulating realistic trade latency."

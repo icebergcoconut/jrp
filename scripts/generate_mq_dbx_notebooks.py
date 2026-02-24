@@ -26,7 +26,7 @@ bmq_cells.append(create_markdown_cell("""# 🚀 Deep Dive: Why BlazingMQ? (Messa
 
 In this notebook, we'll explore why we placed **BlazingMQ** between our Data Fetcher (Producer) and our Databricks Data Lake (Consumer). 
 
-While you may have used Kafka or RabbitMQ before, the fundamental question to answer in a system design interview is: **Why use a Message Queue at all?** Why not just have the fetcher save directly to the database?
+While you may have used Kafka or RabbitMQ before, the fundamental question to answer when designing such a system is: **Why use a Message Queue at all?** Why not just have the fetcher save directly to the database?
 
 ### Core Concepts You Will Learn:
 1. **The 'Slow Consumer' Problem**: What happens without a message queue.
@@ -118,8 +118,8 @@ consumer_thread.join()"""))
 bmq_cells.append(create_markdown_cell("""### ✅ The Solution:
 Notice what happened?! The Producer dumped all 5 ticks in **0.05 seconds** and was "free". It didn't care that the Consumer was grinding away taking 2.5 seconds. 
 
-### 💡 The Interview Defense: "Why BlazingMQ, specifically?"
-If an interviewer asks why Bloomberg's BlazingMQ:
+### 💡 Why BlazingMQ, specifically?
+The reasons for selecting Bloomberg's BlazingMQ over alternatives include:
 
 1. **Deterministic Low Tail-Latency**: Financial data loses value by the millisecond. RabbitMQ pauses for garbage collection and Kafka requires partition rebalancing. BlazingMQ guarantees low, predictable latency without these massive pauses, preventing "stale" ticks from piling up.
 2. **Work-Stealing vs Partitioning**: Kafka ties a consumer to a specific partition. If that consumer crashes, the whole partition pauses. BlazingMQ uses a 'peer-to-peer' mesh network. Any consumer can grab the next message instantly.
@@ -232,10 +232,10 @@ If Delta Lake crashes mid-write, it completely rolls back the failed transaction
 Furthermore, Delta Lake enables **Time Travel**. Because it logs everything, you can literally run SQL like:
 `SELECT * FROM my_table TIMESTAMP AS OF '2023-01-01'` and get the exact snapshot of data that existed on that day! This is critical for ML models to prevent look-ahead bias and rebuild old models.
 
-### 🎙️ The Interview Defense
-**Interviewer:** "Why use Databricks Delta Lake instead of saving to a Postgres RDS database?"
+### 🎙️ Architectural Defense
+**Question:** "Why use Databricks Delta Lake instead of saving to a Postgres RDS database?"
 
-**Your Answer:** "Postgres scales vertically. It is fundamentally impossible to calculate 20-year rolling window functions across 5,000 stocks on a single database efficiently. I used Databricks because Apache Spark scales horizontally across hundreds of nodes to slice feature engineering times from hours to seconds. However, traditional Data Lakes (S3 buckets of Parquet files) lack ACID transactions, meaning pipeline crashes corrupt data. Delta Lake bridges this gap, providing horizontal massive-scale computing paired with the safety of atomic rollback transactions and Time Travel versioning." """))
+**Answer:** "Postgres scales vertically. It is fundamentally impossible to calculate 20-year rolling window functions across 5,000 stocks on a single database efficiently. I used Databricks because Apache Spark scales horizontally across hundreds of nodes to slice feature engineering times from hours to seconds. However, traditional Data Lakes (S3 buckets of Parquet files) lack ACID transactions, meaning pipeline crashes corrupt data. Delta Lake bridges this gap, providing horizontal massive-scale computing paired with the safety of atomic rollback transactions and Time Travel versioning." """))
 
 
 dbx_notebook = {
